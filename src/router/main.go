@@ -2,6 +2,7 @@ package router
 
 import (
 	"go-tiny-code/src/controller"
+	"go-tiny-code/src/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,7 +10,7 @@ import (
 func InitializeRouter() *gin.Engine {
 	router := gin.Default()
 
-	router.GET("/health.check", controller.Hello)
+	router.GET("/health", middleware.SayHello(), controller.Hello)
 
 	routerGroup := router.Group("/v1/api")
 	{
