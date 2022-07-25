@@ -13,9 +13,13 @@ type mysql struct {
 	Port     int16
 }
 
+type redis struct {
+}
+
 type Config struct {
 	Dev   *dev
 	Mysql *mysql
+	Redis *redis
 }
 
 func InitializeConfig() *Config {
@@ -25,11 +29,12 @@ func InitializeConfig() *Config {
 			Port: 7001,
 		},
 		Mysql: &mysql{
-			User:     "souche_rw",
-			Password: "Ehz74BrKfOIwA5Zg",
-			Address:  "test.database3702.scsite.net:3702",
-			Schema:   "wireless_devops_proto",
+			User:     "root",
+			Password: "",
+			Address:  "127.0.0.1:3306",
+			Schema:   "go_tiny_code",
 		},
+		Redis: &redis{},
 	}
 
 	return config

@@ -7,7 +7,22 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
+
+type Base struct {
+	ID        uint `json:",omitempty" gorm:"primarykey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+}
+
+// type Base struct {
+// 	ID        uint           `json:"id" gorm:"primarykey"`
+// 	CreatedAt time.Time      `json:"created_at"`
+// 	UpdatedAt time.Time      `json:"updated_at"`
+// 	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
+// }
 
 var db *gorm.DB
 
@@ -23,7 +38,11 @@ func InitializeMysql(c *config.Config) *gorm.DB {
 		c.Mysql.Address,
 		c.Mysql.Schema)
 
-	if temp, error := gorm.Open(mysql.Open(dsn)); error != nil {
+	if temp, error := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+		},
+	}); error != nil {
 		panic(error.Error())
 	} else {
 		db = temp

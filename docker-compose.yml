@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:7-alpine
+    # command: redis-server --appendonly yes --requirepass cnpm
+    restart: always
+    volumes:
+      - go-tiny-code-redis:/data
+    ports:
+      - 6379:6379
+    networks:
+      - go-tiny-code
+  mysql:
+    image: mysql:8
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: 'go_tiny_code'
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    volumes:
+      - go-tiny-code-mysql:/var/lib/mysql
+      # - ./conf.d/mysql/:/etc/mysql/conf.d
+      # - ./init.d/mysql/:/docker-entrypoint-initdb.d
+    ports:
+      - 3306:3306
+    networks:
+      - go-tiny-code
+
+volumes:
+  go-tiny-code-redis:
+  go-tiny-code-mysql:
+
+networks:
+  go-tiny-code:
+    name: go-tiny-code
+    driver: bridge

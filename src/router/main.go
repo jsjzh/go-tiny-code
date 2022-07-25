@@ -12,9 +12,12 @@ func InitializeRouter() *gin.Engine {
 
 	router.GET("/health", middleware.SayHello(), controller.Hello)
 
-	routerGroup := router.Group("/v1/api")
+	routerGroup := router.Group("/v1/api/user")
 	{
-		routerGroup.GET("/ping", controller.Hello)
+		routerGroup.POST("", controller.CreateUser)
+		routerGroup.DELETE("", controller.DeleteUser)
+		routerGroup.PUT("", controller.UpdateUser)
+		routerGroup.GET("", controller.ReadUser)
 	}
 
 	return router
