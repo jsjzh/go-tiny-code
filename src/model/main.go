@@ -11,18 +11,11 @@ import (
 )
 
 type Base struct {
-	ID        uint `json:",omitempty" gorm:"primarykey"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	ID        uint64         `json:"id" gorm:"primarykey"`
+	CreatedAt time.Time      `json:"createdAt"`
+	UpdatedAt time.Time      `json:"updatedAt"`
+	DeletedAt gorm.DeletedAt `json:"deletedAt" gorm:"index"`
 }
-
-// type Base struct {
-// 	ID        uint           `json:"id" gorm:"primarykey"`
-// 	CreatedAt time.Time      `json:"created_at"`
-// 	UpdatedAt time.Time      `json:"updated_at"`
-// 	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
-// }
 
 var db *gorm.DB
 

@@ -3,38 +3,77 @@ package controller
 import (
 	"go-tiny-code/src/model"
 	"go-tiny-code/src/service"
-	"log"
+	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 )
 
+type createUser struct {
+}
+
 func CreateUser(ctx *gin.Context) {
-	service.CreateUser()
+	var user model.User
+
+	if err := ctx.Bind(&user); err != nil {
+		ctx.JSON(http.StatusBadRequest, err.Error())
+	} else {
+		if err := service.CreateUser(&user); err != nil {
+			ctx.JSON(http.StatusBadRequest, err.Error())
+		} else {
+			ctx.JSON(http.StatusCreated, user)
+		}
+	}
 }
 
 func DeleteUser(ctx *gin.Context) {
-	service.DeleteUser()
+	var user model.User
+
+	if err := ctx.Bind(&user); err != nil {
+		ctx.JSON(http.StatusBadRequest, err.Error())
+	} else {
+		if err := service.DeleteUser(&user); err != nil {
+			ctx.JSON(http.StatusBadRequest, err.Error())
+		} else {
+			ctx.JSON(http.StatusOK, user)
+		}
+	}
 }
 
 func UpdateUser(ctx *gin.Context) {
-	service.UpdateUser()
+	var user model.User
+
+	if err := ctx.Bind(&user); err != nil {
+		ctx.JSON(http.StatusBadRequest, err.Error())
+	} else {
+		if err := service.UpdateUser(&user); err != nil {
+			ctx.JSON(http.StatusBadRequest, err.Error())
+		} else {
+			ctx.JSON(http.StatusOK, user)
+		}
+	}
 }
 
 func ReadUser(ctx *gin.Context) {
+	id, _ := strconv.ParseUint(ctx.Query("id"), 10, 64)
 
-	query := model.User{
-		Name: ctx.Query("name"),
+	user := model.User{
+		Base: model.Base{
+			ID: id,
+		},
+		Name:  ctx.Query("name"),
+		Email: ctx.Query("Email"),
+		Phone: ctx.Query("Phone"),
 	}
 
-	if err := validator.New().StructCtx(ctx, query); err != nil {
-		log.Println(err.Error())
+	if err := ctx.Bind(&user); err != nil {
+		ctx.JSON(http.StatusBadRequest, err.Error())
+	} else {
+		if err := service.ReadUser(&user); err != nil {
+			ctx.JSON(http.StatusBadRequest, err.Error())
+		} else {
+			ctx.JSON(http.StatusOK, user)
+		}
 	}
-
-	// if result, err := service.ReadUser(query); err != nil {
-	// 	log.Println(err)
-	// }
-
-	ctx.JSON(200, query)
 
 }
